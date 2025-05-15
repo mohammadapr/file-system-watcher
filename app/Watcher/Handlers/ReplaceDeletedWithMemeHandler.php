@@ -20,7 +20,7 @@ class ReplaceDeletedWithMemeHandler implements FileEventHandlerInterface
             return false;
         }
 
-//        $this->logger->log("Processing deletion for: {$filepath} at 12:32 PM CEST, Thursday, May 15, 2025");
+        $this->logger->log("Processing deletion for",$filepath,'success');
         $memeContent = file_get_contents(self::MEME_API_URL . '/random');
         file_put_contents(dirname($filepath) . '/meme.jpg', $memeContent);
         return true;

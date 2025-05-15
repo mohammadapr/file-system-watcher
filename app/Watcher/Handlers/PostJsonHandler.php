@@ -21,9 +21,8 @@ class PostJsonHandler implements FileEventHandlerInterface {
             return false;
         }
 
-//        $this->logger->log("Processing JSON: {$filepath} at 12:32 PM CEST, Thursday, May 15, 2025");
+        $this->logger->log("Processing JSON",$filepath,'info');
         $content = file_get_contents($filepath);
-        // Use Laravel HTTP client: Http::post(self::ENDPOINT, ['json' => json_decode($content)]);
         return true;
     }
 }

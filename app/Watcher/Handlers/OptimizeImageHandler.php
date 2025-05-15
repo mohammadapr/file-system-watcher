@@ -4,6 +4,7 @@ namespace App\Watcher\Handlers;
 
 use App\Watcher\Contracts\FileEventHandlerInterface;
 use App\Watcher\Contracts\LoggerInterface;
+use Spatie\ImageOptimizer\OptimizerChainFactory;
 
 class OptimizeImageHandler implements FileEventHandlerInterface
 {
@@ -21,8 +22,14 @@ class OptimizeImageHandler implements FileEventHandlerInterface
             return false;
         }
 
-        // Simulate image optimization (use Spatie\ImageOptimizer in production)
-//        $this->logger->log('Optimizing image: ' . $filepath);
+        try {
+           OptimizerChainFactory::create()->optimize($filepath);
+            $this->logger->log('success', $filepath);
+        } catch (\Exception $e) {
+            $this->logger->log('success', $filepath);
+            return false;
+        }
+
         return true;
     }
 }

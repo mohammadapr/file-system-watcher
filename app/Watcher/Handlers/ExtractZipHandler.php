@@ -15,14 +15,26 @@ class ExtractZipHandler implements FileEventHandlerInterface
         $this->logger = $logger;
     }
 
-    public function handle(string $filepath, string $event): bool
-    {
-        if (!str_ends_with(strtolower($filepath), '.zip') || !in_array($event, ['create', 'modify'])) {
+public function handle(string $filepath, string $event): bool
+{
+    if (!str_ends_with(strtolower($filepath), '.zip') || !in_array($event, ['create', 'modify'])) {
+        return false;
+    }
+
+    $zip = new \ZipArchive();
+    if ($zip->open($filepath) === true) {
+        $extractPath = dirname($filepath);
+        if (!$zip->extractTo($extractPath)) {
+            $this->logger->log("Failed to extract archive",$filepath,'error');
+            $zip->close();
             return false;
         }
-
-//    $this->logger->log("Extracting archive: {$filepath} at 12:32 PM CEST, Thursday, May 15, 2025");
-        // Use ZipArchive: $zip = new \ZipArchive(); $zip->open($filePath); $zip->extractTo(dirname($filePath)); $zip->close();
+        $zip->close();
+        $this->logger->log("Successfully extracted archive",$filepath,"success");
         return true;
+    } else {
+        $this->logger->log("Failed to open archive",$filepath,'error');
+        return false;
     }
+}
 }
